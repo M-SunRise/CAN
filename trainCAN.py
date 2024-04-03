@@ -74,7 +74,7 @@ def train(name, train_df, val_df, test_df):
     data_train_real = RealFaceDataset(
         mode="train",
         df=train_df,
-        transforms=get_augs(name="MLFM_High",norm='imagenet',size=(320, 320)),
+        transforms=get_augs(name="Default",norm='imagenet',size=(320, 320)),
     )
     
     train_sampler_real = torch.utils.data.distributed.DistributedSampler(data_train_real)
@@ -92,7 +92,7 @@ def train(name, train_df, val_df, test_df):
     data_train_fake = FakeFaceDataset(
         mode="train",
         df=train_df,
-        transforms=get_augs(name="MLFM_High",norm='imagenet',size=(320, 320)),
+        transforms=get_augs(name="Default",norm='imagenet',size=(320, 320)),
     )
     
     train_sampler_fake = torch.utils.data.distributed.DistributedSampler(data_train_fake)
