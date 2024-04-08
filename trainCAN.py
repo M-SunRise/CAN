@@ -36,6 +36,7 @@ config_defaults = {
     "weight_decay": 0,
     "rand_seed": 888,
     "accumulation_steps": 2,
+    "path": ""
 }
 
 
@@ -58,7 +59,7 @@ def train(name, train_df, val_df, test_df):
     wandb.init(project=project_name, config=config_defaults, name=run)
     config = wandb.config
 
-    model = CAN()
+    model = CAN(config.path)
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
 
     model = model.to(device)
@@ -74,7 +75,7 @@ def train(name, train_df, val_df, test_df):
     data_train_real = RealFaceDataset(
         mode="train",
         df=train_df,
-        transforms=get_augs(name="MLFM_High",norm='imagenet',size=(320, 320)),
+        transforms=get_augs(name="Default",norm='imagenet',size=(320, 320)),
     )
     
     train_sampler_real = torch.utils.data.distributed.DistributedSampler(data_train_real)
@@ -92,7 +93,7 @@ def train(name, train_df, val_df, test_df):
     data_train_fake = FakeFaceDataset(
         mode="train",
         df=train_df,
-        transforms=get_augs(name="MLFM_High",norm='imagenet',size=(320, 320)),
+        transforms=get_augs(name="Default",norm='imagenet',size=(320, 320)),
     )
     
     train_sampler_fake = torch.utils.data.distributed.DistributedSampler(data_train_fake)
@@ -236,9 +237,9 @@ def test_epoch(model, test_df, optimizer, lr_scheduler, epoch, device):
  
 if __name__ == "__main__":
 
-    train_df = pd.read_csv('/data/jinghui.sun/B4_320/DATA/FF_270_train_NoMask.csv')
-    val_df = pd.read_csv('/data/jinghui.sun/B4_320/DATA/FF_270_valid_NoMask.csv')
-    test_df = pd.read_csv('/data/jinghui.sun/B4_320/DATA/FF_50_test_NoMask.csv')
+    train_df = pd.read_csv('/DATA/FF_270_train_NoMask.csv')
+    val_df = pd.read_csv('/DATA/FF_270_valid_NoMask.csv')
+    test_df = pd.read_csv('/DATA/FF_50_test_NoMask.csv')
     train(name="Combined_hardcore_" + model_name, train_df=train_df, val_df=val_df, test_df=test_df)
     
 

@@ -4,14 +4,16 @@ import torch.nn.functional as F
 
 from backbone.geffnet.gen_efficientnet import tf_efficientnet_b4_ns
 
-def EfficientNetB4(pretrained=False, num_classes=1000, act_layer=nn.ReLU):    
-    return loadstate(tf_efficientnet_b4_ns(pretrained = False, num_classes = num_classes, drop_rate=0.2, act_layer=act_layer), pretrained)
+
+def EfficientNetB4(pretrained=False, num_classes=1000, act_layer=nn.ReLU, cfg_path = ""):    
+    return loadstate(tf_efficientnet_b4_ns(pretrained = False, num_classes = num_classes, drop_rate=0.2, act_layer=act_layer), pretrained, cfg_path)
  
 def Freq_B4(model):
     blocks = nn.ModuleList()
     blocks.append(model.blocks[0])
     blocks.append(model.blocks[1])
-    state_dict = torch.load('/home/jinghui.sun/.cache/torch/hub/checkpoints/tf_efficientnet_b4_ns-d6313a46.pth', map_location='cpu')
+    path = "Pre-training weight path for EfficientNetB4"
+    state_dict = torch.load(path, map_location='cpu')
     strict = True
     blocks.load_state_dict(state_dict, strict=strict)
     return blocks
@@ -52,9 +54,9 @@ def switch_layers(model, layers, x, tip=0, endtip=0):
     
         
     
-def loadstate(model, pretrained):
+def loadstate(model, pretrained, cfg_path):
     if pretrained:
-        state_dict = torch.load('/data/jinghui.sun/20201213/Local/models/geffnet/tf_efficientnet_b4_ns-d6313a46.pth', map_location='cpu')
+        state_dict = torch.load(cfg_path, map_location='cpu')
         classifier = 'classifier'
         num_classes = getattr(model, classifier).weight.shape[0]
         classifier_weight = classifier + '.weight'

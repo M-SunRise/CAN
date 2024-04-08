@@ -9,11 +9,11 @@ from backbone.EfficientNetB4 import EfficientNetB4, switch_layers
 
 
 class CAN(nn.Module):
-    def __init__(self, num_classes=1):
+    def __init__(self, cfg_path="", num_classes=1):
         super(CAN, self).__init__()
         # self.backbone = EfficientNetB4(pretrained = True, num_classes = num_classes, act_layer=nn.Mish)
-        self.backbone = EfficientNetB4(pretrained = True, num_classes = num_classes)
-        self.freq_backbone = EfficientNetB4(pretrained = True, num_classes = num_classes, act_layer=nn.Mish)
+        self.backbone = EfficientNetB4(pretrained = True, num_classes = num_classes, cfg_path = cfg_path)
+        self.freq_backbone = EfficientNetB4(pretrained = True, num_classes = num_classes, act_layer=nn.Mish, cfg_path = cfg_path)
 
         self.fd = FD(size = 320, kernel=3, in_dim=9)
         self.afe = AFE(patch_size=[2,4,8], hidden_dim=3, out_dim=48)
