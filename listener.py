@@ -1,4 +1,9 @@
-# author: muzhan
+"""
+    Run Monitor
+    Timely access to GPU usage, meet specific conditions, and automatically mount programs.
+    Support background operation, disconnection without interference.
+    Code by author
+"""
 import os
 import time
 
